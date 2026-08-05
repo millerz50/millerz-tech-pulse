@@ -1,0 +1,6 @@
+{
+  "name": "Millerz Tech Pulse",
+  "description": "Ultra-clean dark-mode Next.js 16 tech news aggregator, AI quotation generator, and real-time push notification center for Millerz Web, Software & Mobile engineering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
