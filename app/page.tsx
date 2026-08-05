@@ -301,14 +301,15 @@ Millerz Technologies integrates Next.js 16 across client projects to ensure top-
         }>
           {filteredArticles.map((article) => (
             <ArticleCard
-              key={article.id}
-              article={article}
-              viewMode={viewMode}
-              isSaved={preferences.savedArticleIds.includes(article.id)}
-              onSelect={() => setSelectedArticle(article)}
-              onToggleBookmark={() => handleToggleBookmark(article.id)}
-              onLike={() => handleLikeArticle(article.id)}
-            />
+  key={article.id}
+  article={article}
+  viewMode={viewMode}
+  isSaved={preferences.savedArticleIds.includes(article.id)}
+  isRead={preferences.readArticleIds.includes(article.id)}
+  onToggleSave={handleToggleBookmark}
+  onSelectArticle={setSelectedArticle}
+  onAnalyzeAI={setSelectedArticle}
+/>
           ))}
         </div>
 
