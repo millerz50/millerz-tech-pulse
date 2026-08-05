@@ -862,90 +862,56 @@ export default function Home() {
 
     {/* Notifications Drawer - FIXED */}
 
-    <NotificationDrawer
+  
+<NotificationDrawer
+  isOpen={isNotificationsOpen}
+  onClose={() => setIsNotificationsOpen(false)}
+  notifications={notifications}
 
-      isOpen={
-        isNotificationsOpen
-      }
+  onMarkAllRead={() =>
+    setNotifications(prev =>
+      prev.map(n => ({
+        ...n,
+        read: true
+      }))
+    )
+  }
 
+  onClearAll={() =>
+    setNotifications([])
+  }
 
-      onClose={() =>
-        setIsNotificationsOpen(false)
-      }
+  onSelectNotificationArticle={(articleId) => {
 
-
-      notifications={
-        notifications
-      }
-
-
-      onMarkAllRead={()=>{
-
-        setNotifications(prev=>
-
-          prev.map(notification=>({
-
-            ...notification,
-
-            read:true
-
-          }))
-
-        );
-
-      }}
-
-
-
-      onSelectNotification={(notification)=>{
-
-
-        setNotifications(prev=>
-
-          prev.map(item=>
-
-            item.id===notification.id
-
-            ?
-
-            {
-              ...item,
-              read:true
+    setNotifications(prev =>
+      prev.map(n =>
+        n.linkArticleId === articleId
+          ? {
+              ...n,
+              read: true
             }
+          : n
+      )
+    );
 
-            :
 
-            item
+    if(articleId){
 
-          )
-
+      const article =
+        articles.find(
+          a => a.id === articleId
         );
 
 
+      if(article){
+        setSelectedArticle(article);
+      }
 
-        if(notification.linkArticleId){
+    }
 
-          const article =
-          articles.find(
-            a=>a.id===notification.linkArticleId
-          );
+  }}
 
-
-          if(article)
-            setSelectedArticle(article);
-
-        }
-
-
-
-        setIsNotificationsOpen(false);
-
-
-      }}
-
-    />
-
-
+/>
 
   </div>
 );
