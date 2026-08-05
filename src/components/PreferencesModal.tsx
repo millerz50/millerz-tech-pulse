@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  Settings, 
-  Volume2, 
-  VolumeX, 
-  Check, 
-  Mail, 
-  Save 
+import {
+  X,
+  Settings,
+  Volume2,
+  VolumeX,
+  Check,
+  Mail,
+  Save
 } from 'lucide-react';
 
 import { UserPreferences, NewsCategory, ViewMode } from '../types';
@@ -27,9 +27,6 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
   onClose,
   onSavePreferences
 }) => {
-
-
-  if (!isOpen) return null;
 
 
   const [selectedCats, setSelectedCats] = useState<NewsCategory[]>(
@@ -71,9 +68,13 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
 
 
 
+  if (!isOpen) return null;
+
+
+
   const toggleCategory = (cat: NewsCategory) => {
 
-    if(cat === 'all'){
+    if (cat === 'all') {
       setSelectedCats(['all']);
       return;
     }
@@ -85,7 +86,7 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
       );
 
 
-    if(withoutAll.includes(cat)){
+    if (withoutAll.includes(cat)) {
 
       const next =
         withoutAll.filter(
@@ -115,17 +116,17 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
 
     onSavePreferences({
 
-      selectedCategories:selectedCats,
+      selectedCategories: selectedCats,
 
       viewMode,
 
-      autoRefreshSeconds:autoRefresh,
+      autoRefreshSeconds: autoRefresh,
 
-      enableSoundNotifications:soundEnabled,
+      enableSoundNotifications: soundEnabled,
 
       pushEnabled,
 
-      minImpactScoreFilter:minImpact,
+      minImpactScoreFilter: minImpact,
 
       email
 
@@ -135,20 +136,22 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
     setSavedSuccess(true);
 
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
       setSavedSuccess(false);
 
       onClose();
 
-    },800);
+    }, 800);
 
   };
 
 
 
   return (
+
     <div
+      onClick={onClose}
       className="
       fixed inset-0 z-50
       flex items-center justify-center
@@ -156,7 +159,6 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
       bg-black/80
       backdrop-blur-md
       "
-      onClick={onClose}
     >
 
 
@@ -201,18 +203,14 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
           </div>
 
 
-
           <button
-
             onClick={onClose}
-
             className="
             p-2 rounded-lg
             bg-gray-900
             text-gray-400
             hover:text-white
             "
-
           >
 
             <X className="w-5 h-5"/>
@@ -257,36 +255,35 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
             </label>
 
 
-
             <div className="relative mt-3">
 
-
               <Mail
-              className="
-              absolute left-3 top-2.5
-              w-4 h-4 text-gray-500
-              "
+                className="
+                absolute left-3 top-2.5
+                w-4 h-4 text-gray-500
+                "
               />
 
 
               <input
 
-              value={email}
+                value={email}
 
-              onChange={
-                e=>setEmail(e.target.value)
-              }
+                onChange={
+                  e=>setEmail(e.target.value)
+                }
 
-              className="
-              w-full
-              bg-gray-950
-              border border-gray-800
-              rounded-xl
-              py-2 pl-10
-              text-white
-              "
+                className="
+                w-full
+                bg-gray-950
+                border border-gray-800
+                rounded-xl
+                py-2 pl-10
+                text-white
+                "
 
               />
+
 
             </div>
 
@@ -306,21 +303,23 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
 
             <button
 
-            onClick={()=>
-              setPushEnabled(!pushEnabled)
-            }
+              onClick={() =>
+                setPushEnabled(
+                  !pushEnabled
+                )
+              }
 
-            className={`
-            p-4 rounded-xl
-            border
-            ${
-              pushEnabled
-              ?
-              'border-cyan-500 bg-cyan-950'
-              :
-              'border-gray-800 bg-gray-900'
-            }
-            `}
+              className={`
+              p-4 rounded-xl
+              border
+              ${
+                pushEnabled
+                ?
+                'border-cyan-500 bg-cyan-950 text-cyan-300'
+                :
+                'border-gray-800 bg-gray-900 text-gray-400'
+              }
+              `}
 
             >
 
@@ -331,19 +330,22 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
 
 
 
-
             <button
 
-            onClick={()=>
-              setSoundEnabled(!soundEnabled)
-            }
+              onClick={() =>
+                setSoundEnabled(
+                  !soundEnabled
+                )
+              }
 
-            className="
-            p-4 rounded-xl
-            border border-gray-800
-            bg-gray-900
-            flex gap-2 justify-center
-            "
+              className="
+              p-4 rounded-xl
+              border border-gray-800
+              bg-gray-900
+              flex items-center
+              justify-center gap-2
+              text-white
+              "
 
             >
 
@@ -354,7 +356,6 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
                 :
                 <VolumeX/>
               }
-
 
               Sound
 
@@ -379,44 +380,46 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
             <div className="flex flex-wrap gap-2">
 
 
-            {
-              CATEGORIES_CONFIG.map(cat=>(
+              {
+                CATEGORIES_CONFIG.map(cat => (
 
-                <button
+                  <button
 
-                key={cat.id}
+                    key={cat.id}
 
-                onClick={()=>
-                  toggleCategory(cat.id)
-                }
+                    onClick={() =>
+                      toggleCategory(cat.id)
+                    }
 
-                className={`
-                px-3 py-2 rounded-xl text-xs
-                border
-                ${
-                  selectedCats.includes(cat.id)
-                  ?
-                  'bg-cyan-500/20 border-cyan-500 text-cyan-300'
-                  :
-                  'border-gray-800 text-gray-400'
-                }
-                `}
+                    className={`
+                    px-3 py-2
+                    rounded-xl
+                    text-xs
+                    border
+                    ${
+                      selectedCats.includes(cat.id)
+                      ?
+                      'bg-cyan-500/20 border-cyan-500 text-cyan-300'
+                      :
+                      'border-gray-800 text-gray-400'
+                    }
+                    `}
 
-                >
+                  >
 
-                {cat.label}
+                    {cat.label}
 
-                </button>
+                  </button>
 
-
-              ))
-            }
+                ))
+              }
 
 
             </div>
 
 
           </div>
+
 
 
         </div>
@@ -438,11 +441,11 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
 
           <button
 
-          onClick={onClose}
+            onClick={onClose}
 
-          className="
-          text-gray-400
-          "
+            className="
+            text-gray-400
+            "
 
           >
 
@@ -453,30 +456,35 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
 
 
 
-
           <button
 
-          onClick={handleSave}
+            onClick={handleSave}
 
-          className="
-          px-5 py-2
-          rounded-xl
-          bg-cyan-600
-          text-white
-          flex gap-2
-          "
+            className="
+            px-5 py-2
+            rounded-xl
+            bg-cyan-600
+            text-white
+            flex items-center gap-2
+            "
 
           >
 
             {
               savedSuccess
               ?
-              <Check/>
+              <Check className="w-4 h-4"/>
               :
-              <Save/>
+              <Save className="w-4 h-4"/>
             }
 
-            Save
+            {
+              savedSuccess
+              ?
+              'Saved'
+              :
+              'Save'
+            }
 
 
           </button>
@@ -490,6 +498,7 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
 
 
     </div>
+
   );
 
 };
