@@ -216,15 +216,15 @@ Millerz Technologies integrates Next.js 16 across client projects to ensure top-
       
       {/* Real-time Push Toast */}
       {activeToast && (
-        <PushToast 
-          notification={activeToast} 
-          onClose={() => setActiveToast(null)}
-          onOpenArticle={(artId) => {
-            const found = articles.find(a => a.id === artId);
-            if (found) setSelectedArticle(found);
-            setActiveToast(null);
-          }}
-        />
+        <PushToast
+  notification={activeToast}
+  onDismiss={() => setActiveToast(null)}
+  onClickToast={(artId) => {
+    const found = articles.find(a => a.id === artId);
+    if (found) setSelectedArticle(found);
+    setActiveToast(null);
+  }}
+/>
       )}
 
       {/* 1. Header with Millerz Logo & Actions */}
