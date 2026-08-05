@@ -750,11 +750,10 @@ export default function Home() {
 
 
     {/* Preferences */}
-
-    <PreferencesModal
-
-      preferences={
-        preferences
+<PreferencesModal
+  isOpen={isPreferencesOpen}
+  preferences={preferences}
+   
       }
 
 
