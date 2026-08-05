@@ -300,7 +300,7 @@ Millerz Technologies integrates Next.js 16 across client projects to ensure top-
             : "space-y-4"
         }>
           {filteredArticles.map((article) => (
-            <ArticleCard
+           <ArticleCard
   key={article.id}
   article={article}
   viewMode={viewMode}
@@ -308,7 +308,9 @@ Millerz Technologies integrates Next.js 16 across client projects to ensure top-
   isRead={preferences.readArticleIds.includes(article.id)}
   onToggleSave={handleToggleBookmark}
   onSelectArticle={setSelectedArticle}
-  onAnalyzeAI={setSelectedArticle}
+  onAnalyzeAI={(article) => {
+    console.log(article);
+  }}
 />
           ))}
         </div>
@@ -350,21 +352,31 @@ Millerz Technologies integrates Next.js 16 across client projects to ensure top-
 
       {/* Article Detail Modal */}
       <ArticleDetailModal
-        article={selectedArticle}
-        isOpen={!!selectedArticle}
-        onClose={() => setSelectedArticle(null)}
-        isSaved={selectedArticle ? preferences.savedArticleIds.includes(selectedArticle.id) : false}
-        onToggleBookmark={() => selectedArticle && handleToggleBookmark(selectedArticle.id)}
-        onLike={() => selectedArticle && handleLikeArticle(selectedArticle.id)}
-      />
+  article={selectedArticle}
+  onClose={() => setSelectedArticle(null)}
+  isSaved={
+    selectedArticle
+      ? preferences.savedArticleIds.includes(selectedArticle.id)
+      : false
+  }
+  onToggleSave={handleToggleBookmark}
+  onAnalyzeAI={(article) => {
+    console.log(article);
+  }}
+  isAnalyzing={false}
+/>
 
       {/* Preferences Modal */}
-      <PreferencesModal
-        isOpen={isPreferencesOpen}
-        onClose={() => setIsPreferencesOpen(false)}
-        preferences={preferences}
-        onSave={(updated) => setPreferences(updated)}
-      />
+     <PreferencesModal
+    preferences={preferences}
+    onClose={() => setIsPreferencesOpen(false)}
+    onSavePreferences={(updated) =>
+      setPreferences(prev => ({
+        ...prev,
+        ...updated,
+      }))
+    }
+  />
 
       {/* Subscriptions Drawer */}
       <SubscriptionDrawer
