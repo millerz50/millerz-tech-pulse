@@ -36,9 +36,8 @@ import {
 
 
 export default function Home() {
-
-  const [articles, setArticles] =
-    useState<NewsArticle[]>(INITIAL_NEWS);
+const [articles,setArticles] =
+useState<NewsArticle[]>([]);
 
 
   const [activeCategory, setActiveCategory] =
