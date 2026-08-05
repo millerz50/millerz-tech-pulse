@@ -754,7 +754,7 @@ export default function Home() {
   isOpen={isPreferencesOpen}
   preferences={preferences}
    
-      }
+      
 
 
       onClose={() =>
