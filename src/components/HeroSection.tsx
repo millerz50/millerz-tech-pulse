@@ -1,5 +1,13 @@
 import React from 'react';
-import { ArrowUpRight, Sparkles, Layers, Cpu, Code2, Globe } from 'lucide-react';
+import {
+  ArrowUpRight,
+  Sparkles,
+  Layers,
+  Cpu,
+  Code2,
+  Globe
+} from 'lucide-react';
+
 import { NewsCategory } from '../types';
 
 interface HeroSectionProps {
@@ -12,85 +20,186 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreCategory
 }) => {
   return (
-    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#131A15] via-[#0B0E0C] to-[#162B1D] border border-[#212E25] p-6 sm:p-10 shadow-2xl">
-      {/* Glow Effects */}
-      <div className="absolute top-0 right-0 -mr-16 -mt-16 w-96 h-96 bg-[#25432D]/30 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-0 left-1/3 -mb-20 w-80 h-80 bg-[#C85223]/15 rounded-full blur-3xl pointer-events-none"></div>
+    <section className="relative overflow-hidden rounded-3xl border border-[#212E25] bg-gradient-to-br from-[#131A15] via-[#0B0E0C] to-[#162B1D] p-6 sm:p-10 shadow-2xl">
 
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Column: Headlines & CTA */}
-        <div className="lg:col-span-7 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C261F] border border-[#2D5237] text-xs font-mono text-[#C29845]">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="font-bold uppercase tracking-wide">NEXT.JS 16 APP ROUTER ARCHITECTURE</span>
+      {/* Background Glow */}
+      <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-[#345D3F]/20 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/3 -mb-20 h-80 w-80 rounded-full bg-[#C85223]/15 blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 grid gap-10 lg:grid-cols-12 items-center">
+
+        {/* LEFT */}
+        <div className="space-y-6 lg:col-span-7">
+
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#345D3F] bg-[#1C261F] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#C29845]">
+
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+
+            Software Development • AI • Cloud • Mobile Apps
+
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Next.js 16 Web Apps, Mobile Systems &{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E06332] via-[#C29845] to-[#345D3F]">
-              AI Engineering
+          <h1 className="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
+
+            Professional{" "}
+
+            <span className="bg-gradient-to-r from-[#E06332] via-[#C29845] to-[#3F7A50] bg-clip-text text-transparent">
+              Software Development
             </span>
+
+            <br />
+
+            Full-Stack Web, Mobile &
+            AI Solutions
+
           </h1>
 
-          <p className="text-sm sm:text-base text-gray-300 leading-relaxed max-w-2xl">
-            Millerz Technologies builds bespoke web, iOS, Android, and enterprise cloud solutions. Powered by Next.js 16 App Router, Turbopack, and Gemini AI.
+          <p className="max-w-2xl text-base leading-8 text-gray-300">
+
+            Millerz Technologies builds modern software solutions for startups,
+            businesses, government organizations and enterprises.
+
+            We specialize in custom software development, full-stack web
+            applications, Android and iOS mobile apps, AI-powered business
+            systems, cloud infrastructure, APIs, automation, enterprise
+            platforms, SaaS products, eCommerce solutions and digital
+            transformation.
+
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          <div className="flex flex-wrap gap-4">
+
             <button
               onClick={onOpenQuoteModal}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#C85223] to-[#E06332] text-white font-mono font-bold text-xs uppercase tracking-wider hover:brightness-110 transition shadow-lg flex items-center gap-2 group"
+              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#C85223] to-[#E06332] px-6 py-3 font-bold uppercase tracking-wider text-white shadow-lg transition hover:brightness-110"
             >
-              <Sparkles className="w-4 h-4 text-amber-200" />
-              <span>Instant AI Project Quote</span>
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+
+              <Sparkles className="h-4 w-4" />
+
+              Get Free Project Quote
+
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+
             </button>
 
             <button
-              onClick={() => onExploreCategory('web-dev')}
-              className="px-5 py-3 rounded-xl bg-[#1C261F] hover:bg-[#25432D] text-gray-200 border border-[#212E25] font-mono text-xs font-semibold transition flex items-center gap-2"
+              onClick={() => onExploreCategory("software")}
+              className="flex items-center gap-2 rounded-xl border border-[#345D3F] bg-[#1C261F] px-6 py-3 font-semibold text-gray-200 transition hover:bg-[#25432D]"
             >
-              <Globe className="w-4 h-4 text-[#C29845]" />
-              <span>Explore Tech Radar</span>
+
+              <Globe className="h-4 w-4 text-[#C29845]" />
+
+              Explore Services
+
             </button>
+
           </div>
+
         </div>
 
-        {/* Right Column: Architectural Highlights */}
-        <div className="lg:col-span-5 grid grid-cols-2 gap-3 sm:gap-4">
-          <div className="p-4 rounded-2xl bg-[#131A15]/80 border border-[#212E25] hover:border-[#345D3F] transition space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-[#25432D] text-[#C29845] flex items-center justify-center font-bold">
-              <Code2 className="w-4 h-4" />
+        {/* RIGHT */}
+
+        <div className="grid grid-cols-2 gap-4 lg:col-span-5">
+
+          <div className="space-y-3 rounded-2xl border border-[#212E25] bg-[#131A15]/80 p-5 hover:border-[#3F7A50] transition">
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#25432D]">
+
+              <Code2 className="h-5 w-5 text-[#C29845]" />
+
             </div>
-            <p className="text-xs font-mono font-bold text-white uppercase tracking-wider">Next.js 16</p>
-            <p className="text-[11px] text-gray-400">Turbopack, Server Actions, & Route Handlers</p>
+
+            <h3 className="font-bold text-white">
+
+              Full-Stack Development
+
+            </h3>
+
+            <p className="text-sm text-gray-400">
+
+              React, Next.js, Node.js, Express,
+              TypeScript, APIs, Databases and Enterprise Systems.
+
+            </p>
+
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#131A15]/80 border border-[#212E25] hover:border-[#345D3F] transition space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-[#C85223]/20 text-[#E06332] flex items-center justify-center font-bold">
-              <Layers className="w-4 h-4" />
+          <div className="space-y-3 rounded-2xl border border-[#212E25] bg-[#131A15]/80 p-5 hover:border-[#3F7A50] transition">
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C85223]/20">
+
+              <Layers className="h-5 w-5 text-[#E06332]" />
+
             </div>
-            <p className="text-xs font-mono font-bold text-white uppercase tracking-wider">Mobile & iOS</p>
-            <p className="text-[11px] text-gray-400">Quantum UI System & Cross-Platform Native</p>
+
+            <h3 className="font-bold text-white">
+
+              Mobile Apps
+
+            </h3>
+
+            <p className="text-sm text-gray-400">
+
+              Android, iOS, Flutter, React Native,
+              PWAs and Cross-Platform Applications.
+
+            </p>
+
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#131A15]/80 border border-[#212E25] hover:border-[#345D3F] transition space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-[#A88238]/20 text-[#C29845] flex items-center justify-center font-bold">
-              <Cpu className="w-4 h-4" />
+          <div className="space-y-3 rounded-2xl border border-[#212E25] bg-[#131A15]/80 p-5 hover:border-[#3F7A50] transition">
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#A88238]/20">
+
+              <Cpu className="h-5 w-5 text-[#C29845]" />
+
             </div>
-            <p className="text-xs font-mono font-bold text-white uppercase tracking-wider">Gemini 3.6 AI</p>
-            <p className="text-[11px] text-gray-400">Itemized quotation engine & news synthesis</p>
+
+            <h3 className="font-bold text-white">
+
+              Artificial Intelligence
+
+            </h3>
+
+            <p className="text-sm text-gray-400">
+
+              AI Chatbots, Automation,
+              Machine Learning,
+              AI Assistants and Intelligent Business Tools.
+
+            </p>
+
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#131A15]/80 border border-[#212E25] hover:border-[#345D3F] transition space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-[#25432D] text-[#C29845] flex items-center justify-center font-bold">
-              <Globe className="w-4 h-4" />
+          <div className="space-y-3 rounded-2xl border border-[#212E25] bg-[#131A15]/80 p-5 hover:border-[#3F7A50] transition">
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#25432D]">
+
+              <Globe className="h-5 w-5 text-[#C29845]" />
+
             </div>
-            <p className="text-xs font-mono font-bold text-white uppercase tracking-wider">Cloud Run</p>
-            <p className="text-[11px] text-gray-400">Auto-scaling container deployment & proxying</p>
+
+            <h3 className="font-bold text-white">
+
+              Cloud & DevOps
+
+            </h3>
+
+            <p className="text-sm text-gray-400">
+
+              AWS, Google Cloud,
+              Azure, Docker,
+              Kubernetes,
+              CI/CD and Secure Hosting.
+
+            </p>
+
           </div>
+
         </div>
+
       </div>
+
     </section>
   );
 };
