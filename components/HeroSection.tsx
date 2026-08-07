@@ -8,7 +8,7 @@ import {
   Globe
 } from 'lucide-react';
 
-import { NewsCategory } from '../types';
+import { NewsCategory } from  '@/types';
 
 interface HeroSectionProps {
   onOpenQuoteModal: () => void;
