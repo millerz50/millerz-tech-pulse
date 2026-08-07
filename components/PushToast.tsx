@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Bell, Flame, X, ArrowRight, Zap } from 'lucide-react';
-import { NotificationItem } from '../types';
+import { NotificationItem }from '@/types' ;
 
 interface PushToastProps {
   notification: NotificationItem | null;
