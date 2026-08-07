@@ -39,7 +39,7 @@ export const MillerzLogo: React.FC<MillerzLogoProps> = ({
       }}
     >
       <img
-        src="/logo.png"
+        src="/images/millerz-logo.png"
         alt="Millerz Technologies"
         width={dimensions.width}
         height={dimensions.height}
