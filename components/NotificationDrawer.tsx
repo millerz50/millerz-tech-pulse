@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Bell, CheckCheck, Trash2, Flame, ExternalLink, Radio } from 'lucide-react';
-import { NotificationItem, NewsArticle } from '../types';
+import { NotificationItem, NewsArticle } from '@/types';
 
 interface NotificationDrawerProps {
   isOpen: boolean;
