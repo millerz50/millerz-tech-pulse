@@ -14,32 +14,36 @@ export const MillerzLogo: React.FC<MillerzLogoProps> = ({
   const dimensions = {
     sm: {
       height: 28,
-      width: showText ? 140 : 28,
+      width: showText ? 130 : 28,
     },
     md: {
-      height: 36,
-      width: showText ? 180 : 36,
+      height: 32,
+      width: showText ? 148 : 32,
     },
     lg: {
-      height: 48,
-      width: showText ? 240 : 48,
+      height: 40,
+      width: showText ? 185 : 40,
     },
     xl: {
-      height: 64,
-      width: showText ? 320 : 64,
+      height: 48,
+      width: showText ? 220 : 48,
     },
   }[size];
 
   return (
     <div
-      className={`inline-flex items-center shrink-0 transition-transform duration-200 hover:scale-[1.02] ${className}`}
+      className={`inline-flex items-center shrink-0 ${className}`}
+      style={{
+        width: dimensions.width,
+        height: dimensions.height,
+      }}
     >
       <img
-        src="/images/millerz-logo.png"
+        src="/logo.png"
         alt="Millerz Technologies"
         width={dimensions.width}
         height={dimensions.height}
-        className="h-auto w-auto max-w-full object-contain"
+        className="w-full h-full object-contain object-left"
         draggable={false}
       />
     </div>
