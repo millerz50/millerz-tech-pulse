@@ -27,7 +27,7 @@ import {
   Zap,
   CheckCircle2
 } from 'lucide-react';
-import { ProjectQuotation, ProjectType } from '../types';
+import { ProjectQuotation, ProjectType } from '@/types';
 import { MillerzLogo } from './MillerzLogo';
 
 interface QuoteGeneratorModalProps {
