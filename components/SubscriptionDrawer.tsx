@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, CheckCircle, ShieldCheck, History, Radio, Send, Bell } from 'lucide-react';
-import { SubscriptionRecord, NewsCategory } from '../types';
+import { SubscriptionRecord, NewsCategory } from '@/types';
 
 interface SubscriptionDrawerProps {
   isOpen: boolean;
