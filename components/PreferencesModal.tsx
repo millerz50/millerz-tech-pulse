@@ -10,7 +10,7 @@ import {
   Save
 } from 'lucide-react';
 
-import { UserPreferences, NewsCategory, ViewMode } from '../types';
+import { UserPreferences, NewsCategory, ViewMode } from '@/types';
 import { CATEGORIES_CONFIG } from './CategoryNav';
 
 
