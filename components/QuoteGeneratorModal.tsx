@@ -1,3 +1,4 @@
+'use client';
 
 import React, { useState } from 'react';
 import { 
@@ -101,8 +102,6 @@ export const QuoteGeneratorModal: React.FC<QuoteGeneratorModalProps> = ({
   onClose,
   defaultEmail = ''
 }) => {
-  if (!isOpen) return null;
-
   // Form State
   const [clientName, setClientName] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -124,6 +123,8 @@ export const QuoteGeneratorModal: React.FC<QuoteGeneratorModalProps> = ({
   const [generatedQuote, setGeneratedQuote] = useState<ProjectQuotation | null>(null);
   const [copiedSuccess, setCopiedSuccess] = useState(false);
   const [submittedSuccess, setSubmittedSuccess] = useState(false);
+
+  if (!isOpen) return null;
 
   const categories = ['All', 'Core', 'Frontend', 'Mobile', 'AI & ML', 'Backend & DB', 'E-Commerce', 'Data & Analytics', 'DevOps & Security'];
 

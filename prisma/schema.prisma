@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  tagline        String
+  description    String
+  type           String
+  categoryGroup  String   @default("platform")
+  href           String
+  imageUrl       String
+  metrics        String?
+  techStack      String
+  seoTitle       String
+  seoDescription String
+  seoKeywords    String?
+  status         String   @default("Live")
+  featured       Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Quotation {
+  id                   String   @id @default(cuid())
+  quotationId          String   @unique
+  clientName           String
+  companyName          String?
+  email                String
+  projectType          String
+  features             String
+  targetTimeline       String
+  minPrice             Int
+  maxPrice             Int
+  currency             String   @default("USD")
+  itemizedScope        String
+  architectureProposal String
+  recommendedTechStack String
+  deliveryMilestones   String
+  validityDays         Int      @default(30)
+  status               String   @default("submitted")
+  createdAt            DateTime @default(now())
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  topics      String
+  frequency   String   @default("instant")
+  pushEnabled Boolean  @default(true)
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Inquiry {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  company      String?
+  projectScope String
+  message      String
+  createdAt    DateTime @default(now())
+}

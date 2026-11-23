@@ -1,20 +1,19 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI, Type } from '@google/genai';
-
-let serverQuotations: any[] = [];
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { 
-      clientName, 
-      companyName, 
-      email, 
-      projectType, 
-      selectedFeatures = [], 
-      targetTimeline, 
-      budgetRange, 
-      projectNotes 
+    const {
+      clientName,
+      companyName,
+      email,
+      projectType = 'Web Platform',
+      selectedFeatures = [],
+      targetTimeline = '1-2 months',
+      budgetRange = '$10,000 - $25,000',
+      projectNotes = '',
     } = body;
 
     if (!clientName || !email) {
@@ -24,129 +23,208 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || '';
-    const ai = new GoogleGenAI({ apiKey });
     const quoteCode = `QT-${new Date().getFullYear()}-MLZ-${Math.floor(1000 + Math.random() * 9000)}`;
+    const featuresList: string[] = Array.isArray(selectedFeatures)
+      ? selectedFeatures.map(String)
+      : [];
 
-    const prompt = `You are the Principal Solutions Architect at Millerz Technologies (a top-tier Web Development, Mobile Apps, Cloud Engineering, and Custom Software consultancy).
+    let parsedAI: {
+      estimatedMinPrice?: number;
+      estimatedMaxPrice?: number;
+      architectureProposal?: string;
+      recommendedTechStack?: string[];
+      itemizedScope?: {
+        moduleName: string;
+        description: string;
+        estimatedHours: number;
+        cost: number;
+      }[];
+      deliveryMilestones?: {
+        phase: string;
+        weeks: number;
+        deliverables: string;
+      }[];
+    } = {};
+
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
+    if (apiKey) {
+      try {
+        const ai = new GoogleGenAI({ apiKey });
+        const prompt = `You are the Principal Solutions Architect at Millerz Technologies (Web Development, Mobile Apps, Cloud Engineering, Technical SEO, and Custom Software).
 Generate an official itemized Project Quotation and Technical Proposal for:
 - Client: ${clientName} (${companyName || 'Independent Organization'})
 - Email: ${email}
 - Project Type: ${projectType}
-- Selected Features: ${selectedFeatures.join(', ')}
+- Selected Features: ${featuresList.join(', ')}
 - Target Timeline: ${targetTimeline}
-- Budget Parameter: ${budgetRange || 'Standard Market Estimation'}
+- Budget Parameter: ${budgetRange}
 - Client Requirement Notes: ${projectNotes || 'Standard production deployment requirements.'}
 
-Return JSON with itemized scope modules, calculated hours, realistic pricing breakdown in USD, recommended tech stack (Next.js 16, React 19, TypeScript, Tailwind, Cloud Run, Gemini AI, PostgreSQL/Firestore), phased delivery milestones, and an architecture proposal overview.`;
+Return JSON with itemized scope modules, calculated hours, realistic pricing breakdown in USD, recommended tech stack (Next.js 16, React 19, TypeScript, Tailwind CSS, Prisma ORM, SQLite/PostgreSQL, Schema.org SEO), phased delivery milestones, and an architecture proposal overview.`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.6-flash',
-      contents: prompt,
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            estimatedMinPrice: { type: Type.INTEGER },
-            estimatedMaxPrice: { type: Type.INTEGER },
-            architectureProposal: { type: Type.STRING },
-            recommendedTechStack: { type: Type.ARRAY, items: { type: Type.STRING } },
-            itemizedScope: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  moduleName: { type: Type.STRING },
-                  description: { type: Type.STRING },
-                  estimatedHours: { type: Type.INTEGER },
-                  cost: { type: Type.INTEGER }
+        const response = await ai.models.generateContent({
+          model: 'gemini-3.6-flash',
+          contents: prompt,
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                estimatedMinPrice: { type: Type.INTEGER },
+                estimatedMaxPrice: { type: Type.INTEGER },
+                architectureProposal: { type: Type.STRING },
+                recommendedTechStack: { type: Type.ARRAY, items: { type: Type.STRING } },
+                itemizedScope: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      moduleName: { type: Type.STRING },
+                      description: { type: Type.STRING },
+                      estimatedHours: { type: Type.INTEGER },
+                      cost: { type: Type.INTEGER },
+                    },
+                    required: ['moduleName', 'description', 'estimatedHours', 'cost'],
+                  },
                 },
-                required: ['moduleName', 'description', 'estimatedHours', 'cost']
-              }
+                deliveryMilestones: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      phase: { type: Type.STRING },
+                      weeks: { type: Type.INTEGER },
+                      deliverables: { type: Type.STRING },
+                    },
+                    required: ['phase', 'weeks', 'deliverables'],
+                  },
+                },
+              },
+              required: [
+                'estimatedMinPrice',
+                'estimatedMaxPrice',
+                'architectureProposal',
+                'recommendedTechStack',
+                'itemizedScope',
+                'deliveryMilestones',
+              ],
             },
-            deliveryMilestones: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  phase: { type: Type.STRING },
-                  weeks: { type: Type.INTEGER },
-                  deliverables: { type: Type.STRING }
-                },
-                required: ['phase', 'weeks', 'deliverables']
-              }
-            }
           },
-          required: [
-            'estimatedMinPrice', 
-            'estimatedMaxPrice', 
-            'architectureProposal', 
-            'recommendedTechStack', 
-            'itemizedScope', 
-            'deliveryMilestones'
-          ]
+        });
+
+        if (response.text) {
+          parsedAI = JSON.parse(response.text);
         }
+      } catch (aiError) {
+        console.warn('Gemini fallback triggered for quotation:', aiError);
       }
+    }
+
+    const baseCost = 4500 + featuresList.length * 1100;
+    const minPrice = parsedAI.estimatedMinPrice || baseCost;
+    const maxPrice = parsedAI.estimatedMaxPrice || Math.round(baseCost * 1.45);
+    const itemizedScope = parsedAI.itemizedScope || [
+      {
+        moduleName: 'UI/UX Architecture & Next.js 16 Design System',
+        description: `Responsive Next.js 16 App Router interface tailored for ${projectType}`,
+        estimatedHours: 36,
+        cost: Math.round(minPrice * 0.35),
+      },
+      {
+        moduleName: 'Full-Stack API Routes, Prisma ORM & SQLite Schema',
+        description: `Server-side endpoints, relational modeling, and validation (${featuresList.slice(0, 3).join(', ') || 'Core Modules'})`,
+        estimatedHours: 44,
+        cost: Math.round(minPrice * 0.45),
+      },
+      {
+        moduleName: 'Technical SEO, Schema.org JSON-LD & Production Launch',
+        description: 'OpenGraph cards, XML sitemaps, Core Web Vitals optimization, and deployment',
+        estimatedHours: 20,
+        cost: Math.round(minPrice * 0.2),
+      },
+    ];
+    const architectureProposal =
+      parsedAI.architectureProposal ||
+      `Production Next.js 16 App Router architecture backed by Prisma ORM and SQLite/PostgreSQL, paired with technical SEO (OpenGraph, canonical URLs, JSON-LD) and containerized cloud deployment for ${companyName || clientName}.`;
+    const recommendedTechStack = parsedAI.recommendedTechStack || [
+      'Next.js 16',
+      'React 19',
+      'TypeScript',
+      'Prisma ORM',
+      'SQLite',
+      'Tailwind CSS',
+    ];
+    const deliveryMilestones = parsedAI.deliveryMilestones || [
+      {
+        phase: 'Phase 1: Discovery & Database Schema',
+        weeks: 1,
+        deliverables: 'Technical specs, Prisma schema, and wireframes.',
+      },
+      {
+        phase: 'Phase 2: Core Engineering & SEO Architecture',
+        weeks: 3,
+        deliverables: 'Full-stack features, API handlers, and Schema.org metadata.',
+      },
+      {
+        phase: 'Phase 3: QA, Performance Audit & Launch',
+        weeks: 1,
+        deliverables: 'Lighthouse verification, production rollout, and handoff.',
+      },
+    ];
+
+    const saved = await prisma.quotation.create({
+      data: {
+        quotationId: quoteCode,
+        clientName: String(clientName),
+        companyName: companyName ? String(companyName) : null,
+        email: String(email),
+        projectType: String(projectType),
+        features: JSON.stringify(featuresList),
+        targetTimeline: String(targetTimeline),
+        minPrice,
+        maxPrice,
+        currency: 'USD',
+        itemizedScope: JSON.stringify(itemizedScope),
+        architectureProposal,
+        recommendedTechStack: JSON.stringify(recommendedTechStack),
+        deliveryMilestones: JSON.stringify(deliveryMilestones),
+        validityDays: 30,
+        status: 'submitted',
+      },
     });
 
-    const parsedAI = JSON.parse(response.text || '{}');
-
     const quotation = {
-      quotationId: quoteCode,
-      clientName,
-      companyName: companyName || '',
-      email,
-      projectType,
-      features: selectedFeatures,
-      targetTimeline: targetTimeline || '1-2 months',
+      quotationId: saved.quotationId,
+      clientName: saved.clientName,
+      companyName: saved.companyName || '',
+      email: saved.email,
+      projectType: saved.projectType,
+      features: featuresList,
+      targetTimeline: saved.targetTimeline,
       estimatedPriceRange: {
-        min: parsedAI.estimatedMinPrice || 7500,
-        max: parsedAI.estimatedMaxPrice || 16500,
-        currency: 'USD'
+        min: saved.minPrice,
+        max: saved.maxPrice,
+        currency: saved.currency,
       },
-      itemizedScope: parsedAI.itemizedScope || [
-        { 
-          moduleName: 'UI/UX Architecture & Next.js 16 Design System', 
-          description: 'Responsive Next.js 16 App Router layouts & Millerz design components', 
-          estimatedHours: 35, 
-          cost: 3500 
-        },
-        { 
-          moduleName: 'Full-Stack Core Logic & API Proxying', 
-          description: 'Server-side API Route Handlers, auth & state management', 
-          estimatedHours: 45, 
-          cost: 4500 
-        },
-        { 
-          moduleName: 'Quality Assurance & Cloud Run Deployment', 
-          description: 'Automated testing and Cloud Run production containerization', 
-          estimatedHours: 20, 
-          cost: 2000 
-        }
-      ],
-      architectureProposal: parsedAI.architectureProposal || 'A high-availability Next.js 16 full-stack web application hosted on Cloud Run with containerized App Router handlers and server-side secret management.',
-      recommendedTechStack: parsedAI.recommendedTechStack || ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS', 'Gemini AI', 'Cloud Run'],
-      deliveryMilestones: parsedAI.deliveryMilestones || [
-        { phase: 'Phase 1: Discovery & Architecture Blueprint', weeks: 1, deliverables: 'Wireframes, API schemas, and technical specs.' },
-        { phase: 'Phase 2: Next.js 16 App Router Core & Motion UI', weeks: 3, deliverables: 'Functional web application with live API integrations.' },
-        { phase: 'Phase 3: QA, Security Audit & Cloud Launch', weeks: 1, deliverables: 'Production Cloud Run deployment, domain setup & handoff.' }
-      ],
-      generatedAt: new Date().toISOString(),
-      validityDays: 30,
-      status: 'submitted'
+      itemizedScope,
+      architectureProposal: saved.architectureProposal,
+      recommendedTechStack,
+      deliveryMilestones,
+      generatedAt: saved.createdAt.toISOString(),
+      validityDays: saved.validityDays,
+      status: saved.status,
     };
-
-    serverQuotations.unshift(quotation);
 
     return NextResponse.json({
       status: 'success',
-      quotation
+      quotation,
     });
-  } catch (error: any) {
-    console.error('Next.js 16 Quotation Error:', error);
+  } catch (error: unknown) {
+    console.error('Quotation Error:', error);
+    const message =
+      error instanceof Error ? error.message : 'Failed to generate quotation';
     return NextResponse.json(
-      { status: 'error', message: error.message || 'Failed to generate quotation' },
+      { status: 'error', message },
       { status: 500 }
     );
   }
