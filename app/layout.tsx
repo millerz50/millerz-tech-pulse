@@ -1,3 +1,4 @@
+import Script from "next/script";
 import type { Metadata, Viewport } from 'next';
 import { ReactNode } from 'react';
 import { Plus_Jakarta_Sans, DM_Sans, JetBrains_Mono } from 'next/font/google';
@@ -230,6 +231,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdGraph) }}
         />
+        <Script
+  src="https://www.careermatched.co.zw/api/tracker.js"
+  data-site="zw_65c7bdabbc5d"
+  strategy="afterInteractive"
+/>
         {children}
       </body>
     </html>
